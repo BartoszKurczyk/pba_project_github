@@ -5,13 +5,13 @@ import io.swagger.database.model.UserDB;
 import io.swagger.database.repository.UsersRepository;
 import io.swagger.exceptions.BadPasswordExcepiton;
 import io.swagger.exceptions.BadUsernameException;
-import io.swagger.model.ResponseHeader;
-import io.swagger.model.User;
-import io.swagger.model.UserListResponse;
+import io.swagger.exceptions.UserNotFoundException;
+import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -34,6 +34,7 @@ public class UsersApiController implements UsersApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    private AdditionalFeatures additionalFeatures = new AdditionalFeatures();
 
 
 
@@ -57,7 +58,6 @@ public class UsersApiController implements UsersApi {
 
     @Override
     public ResponseEntity<UserListResponse> getAllUsers(UUID postmanToken, String token) {
-        AdditionalFeatures additionalFeatures = new AdditionalFeatures();
         additionalFeatures.BasicAuth(token);
         List<User> userList = usersRepository.findAll().stream().map(u-> User.builder().id(u.getId()).
                 name(u.getName()).surname(u.getSurname()).adressStreet(u.getAdressStreet()).buildingNumber(u.getBuildingNumber()).
@@ -68,4 +68,43 @@ public class UsersApiController implements UsersApi {
 
     }
 
+    @Override
+    public ResponseEntity<UserResponse> createUser(CreateRequest body, String token) {
+        additionalFeatures.BasicAuth(token);
+        User user = body.getUser();
+        UserDB userDB = UserDB.builder().id(user.getId()).name(user.getName()).surname(user.getSurname()).adressStreet(user.getAdressStreet()).
+                buildingNumber(user.getBuildingNumber()).apartmentNumber(user.getApartmentNumber()).zipCode(user.getZipCode()).
+                city(user.getCity()).email(user.getEmail()).build();
+        usersRepository.save(userDB);
+        return ResponseEntity.ok().body(UserResponse.builder().responseHeader(ResponseHeader.builder().
+                responseId(body.getRequestHeader().getRequestId()).sendDate(new Date()).build()).user(user).build());
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteUser(UUID id, String token) {
+        additionalFeatures.BasicAuth(token);
+        if(usersRepository.findById(id).orElse(null) == null) throw new UserNotFoundException("User not found. Can't be deleted");
+        usersRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<UserResponse> updateUser(UUID id, UserUpdateRequest body, String token) {
+        additionalFeatures.BasicAuth(token);
+        User user = body.getUser();
+        UserDB foundUser = usersRepository.findById(id).orElse(null);
+        if(foundUser == null) throw new UserNotFoundException("User not found. Can't be updated");
+        foundUser.setName(user.getName());
+        foundUser.setSurname(user.getSurname());
+        foundUser.setAdressStreet(user.getAdressStreet());
+        foundUser.setBuildingNumber(user.getBuildingNumber());
+        foundUser.setApartmentNumber(user.getApartmentNumber());
+        foundUser.setZipCode(user.getZipCode());
+        foundUser.setCity(user.getCity());
+        foundUser.setEmail(user.getEmail());
+
+        usersRepository.save(foundUser);
+        return ResponseEntity.ok().body(UserResponse.builder().responseHeader(ResponseHeader.builder().
+                responseId(body.getRequestHeader().getRequestId()).sendDate(new Date()).build()).user(user).build());
+    }
 }

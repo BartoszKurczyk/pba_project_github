@@ -5,8 +5,12 @@
  */
 package io.swagger.api;
 
+import io.swagger.model.CreateRequest;
 import io.swagger.model.Error;
+import java.util.UUID;
 import io.swagger.model.UserListResponse;
+import io.swagger.model.UserResponse;
+import io.swagger.model.UserUpdateRequest;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,14 +26,41 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-import java.util.UUID;
-
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-16T07:28:43.311Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-01-19T11:45:02.468Z")
 
 @Validated
 @Api(value = "users", description = "the users API")
 @RequestMapping(value = "/api")
 public interface UsersApi {
+
+    @ApiOperation(value = "Create", nickname = "createUser", notes = "Create new user", response = UserResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "users", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "User created successfully", response = UserResponse.class),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity. Codes: USER_ALREADY_EXISTS", response = Error.class) })
+    @RequestMapping(value = "/users",
+        produces = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<UserResponse> createUser(@ApiParam(value = "User object that has to be added" ,required=true )  @Valid @RequestBody CreateRequest body, @RequestHeader("Authorization") String token);
+
+
+    @ApiOperation(value = "Delete user", nickname = "deleteUser", notes = "Removes user", authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "users", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "No content"),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 404, message = "User not found", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity.", response = Error.class) })
+    @RequestMapping(value = "/users/{id}",
+        produces = { "application/json" },
+        method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteUser(@ApiParam(value = "",required=true) @PathVariable("id") UUID id, @RequestHeader("Authorization") String token);
+
 
     @ApiOperation(value = "Get users list", nickname = "getAllUsers", notes = "Gets all users data", response = UserListResponse.class, authorizations = {
         @Authorization(value = "basicAuth")
@@ -43,5 +74,20 @@ public interface UsersApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<UserListResponse> getAllUsers(@RequestHeader("Postman-Token") UUID postmanToken, @RequestHeader("Authorization") String token);
+
+
+    @ApiOperation(value = "Update user", nickname = "updateUser", notes = "Update user data", response = UserResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "users", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success", response = UserResponse.class),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 404, message = "User not found", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity.", response = Error.class) })
+    @RequestMapping(value = "/users/{id}",
+        produces = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<UserResponse> updateUser(@ApiParam(value = "",required=true) @PathVariable("id") UUID id,@ApiParam(value = "" ,required=true )  @Valid @RequestBody UserUpdateRequest body, @RequestHeader("Authorization") String token);
 
 }

@@ -6,9 +6,13 @@
 package io.swagger.api;
 
 import io.swagger.model.CreateProductRequest;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.model.CreateProductRequest;
 import io.swagger.model.Error;
 import io.swagger.model.ProductResponse;
+import io.swagger.model.ProductUpdateRequest;
 import io.swagger.model.ProductsListResponse;
+import java.util.UUID;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -23,16 +27,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-16T08:40:45.527Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-01-19T11:41:24.115Z")
 
 @Validated
 @Api(value = "products", description = "the products API")
 @RequestMapping(value = "/api")
 public interface ProductsApi {
 
-    @ApiOperation(value = "Create product", nickname = "addProduct", notes = "Create new produsct", response = ProductResponse.class, authorizations = {
-        @Authorization(value = "bearerAuth")
+    @ApiOperation(value = "Create product", nickname = "addProduct", notes = "Create new product", response = ProductResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
     }, tags={ "products", })
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "User created successfully", response = ProductResponse.class),
@@ -42,7 +48,22 @@ public interface ProductsApi {
     @RequestMapping(value = "/products",
         produces = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<ProductResponse> addProduct(@ApiParam(value = "Product object that has to be added" ,required=true )  @Valid @RequestBody CreateProductRequest body);
+    ResponseEntity<ProductResponse> addProduct(@ApiParam(value = "Product object that has to be added" ,required=true )  @Valid @RequestBody CreateProductRequest body, @RequestHeader("Authorization") String token) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException;
+
+
+    @ApiOperation(value = "Delete product", nickname = "deleteProduct", notes = "Removes product", authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "products", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "No content"),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 404, message = "User not found", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity.", response = Error.class) })
+    @RequestMapping(value = "/products/{id}",
+        produces = { "application/json" },
+        method = RequestMethod.DELETE)
+    ResponseEntity<Void> deleteProduct(@ApiParam(value = "",required=true) @PathVariable("id") UUID id, @RequestHeader("Authorization") String token);
 
 
     @ApiOperation(value = "Get list of products", nickname = "getProducts", notes = "Get list of products", response = ProductsListResponse.class, authorizations = {
@@ -51,11 +72,25 @@ public interface ProductsApi {
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Success", response = ProductsListResponse.class),
         @ApiResponse(code = 400, message = "Bad request", response = Error.class),
-        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-        @ApiResponse(code = 422, message = "Unprocessable entity. Codes: USER_ALREADY_EXISTS", response = Error.class) })
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class) })
     @RequestMapping(value = "/products",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<ProductsListResponse> getProducts(@RequestHeader("Authorization") String token);
+
+
+    @ApiOperation(value = "Update product", nickname = "updateProduct", notes = "Update products data", response = ProductResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "products", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success", response = ProductResponse.class),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 404, message = "User not found", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity.", response = Error.class) })
+    @RequestMapping(value = "/products/{id}",
+        produces = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<ProductResponse> updateProduct(@ApiParam(value = "",required=true) @PathVariable("id") UUID id,@ApiParam(value = "" ,required=true )  @Valid @RequestBody ProductUpdateRequest body, @RequestHeader("Authorization") String token);
 
 }

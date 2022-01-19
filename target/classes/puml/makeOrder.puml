@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+activate Client
+Client->"Res Server":getUsers(basicAuth)
+activate "Res Server"
+"Res Server"->"Res Server":validBasicAuth
+alt if valid ok
+    "Res Server"->"Res Server":getAllUsers
+    "Res Server"-->Client:return listOfUsers
+else valid not ok
+    "Res Server"-->Client: return error
+end
+deactivate "Res Server"
+
+Client->"Res Server":getProducts(basicAuth)
+activate "Res Server"
+"Res Server"->"Res Server":validBasicAuth
+alt if valid ok
+    "Res Server"->"Res Server":getAllProducts
+    "Res Server"-->Client:return listOfProducts
+else valid not ok
+    "Res Server"-->Client: return error
+end
+deactivate "Res Server"
+
+Client -> "Auth Server": getToken()
+activate "Auth Server"
+"Auth Server" --> Client: token
+deactivate "Auth Server"
+Client -> "Res Server": makeOrder(token,userId, listOfProductsIds)
+activate "Res Server"
+"Res Server" -> "Res Server": hmacCheck
+alt integrity not ok
+"Res Server"-->Client: return error
+else integrity ok
+    "Res Server" -> "Res Server": checkToken
+    alt token not ok
+        "Res Server" --> Client: return error
+    else token ok
+        "Res Server" -> "Res Server": findUserById
+        alt found
+            "Res Server" -> "Res Server":findAllProducts
+            alt all found
+                "Res Server" -> "Res Server": createOrder
+                "Res Server" --> Client: return Order
+            else not all found
+                "Res Server" --> Client:return error
+            end
+        else not found
+            "Res Server" --> Client: return error
+        end
+    end
+end
+
+deactivate "Res Server"
+deactivate Client
+@enduml
