@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.ws.rs.BadRequestException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,6 +26,15 @@ public class ExceptionHandler {
     }
     @org.springframework.web.bind.annotation.ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Error> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex, WebRequest request) {
+        Error error = new Error();
+        error.setResponseHeader(ResponseHeader.builder().sendDate(new Date()).responseId(UUID.randomUUID()).build());
+        error.code("400");
+        error.message(ex.getMessage());
+        return new ResponseEntity<Error>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<Error> handleBadRequestException(BadRequestException ex, WebRequest request) {
         Error error = new Error();
         error.setResponseHeader(ResponseHeader.builder().sendDate(new Date()).responseId(UUID.randomUUID()).build());
         error.code("400");
