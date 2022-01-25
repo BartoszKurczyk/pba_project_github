@@ -1,0 +1,15 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+activate Client
+Client->"Res Server":getOrders(basicAuth)
+activate "Res Server"
+"Res Server"->"Res Server":validBasicAuth
+alt valid ok
+    "Res Server"->"Res Server":getAllOrders
+    "Res Server"-->Client:return listOfOrders
+else valid not ok
+    "Res Server"-->Client: return error
+end
+deactivate "Res Server"
+@enduml

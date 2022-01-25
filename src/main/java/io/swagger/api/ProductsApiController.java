@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.AdditionalFeatures;
 import io.swagger.database.model.ProductDB;
 import io.swagger.database.repository.ProductsRepository;
+import io.swagger.exceptions.ProductAlreadyExistsException;
 import io.swagger.exceptions.ProductNotFoundException;
+import io.swagger.exceptions.UserAlreadyExistsException;
 import io.swagger.exceptions.UserNotFoundException;
 import io.swagger.model.*;
 import org.slf4j.Logger;
@@ -61,6 +63,9 @@ public class ProductsApiController implements ProductsApi {
     public ResponseEntity<ProductResponse> addProduct(@Valid CreateProductRequest body,String token) throws NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         additionalFeatures.BasicAuth(token);
         Product product = body.getProduct();
+        if(productsRepository.findAll().stream().filter(x-> x.getId().equals(product.getId()) ||
+                (x.getProductType().equals(product.getProducer()) && x.getName().equals(product.getName()))).findAny().orElse(null)!=null)
+            throw new ProductAlreadyExistsException("Product can't be added. Already exists.");
         ProductDB productDB = ProductDB.builder().id(product.getId()).name(product.getName()).producer(product.getProducer()).description(product.getDescription()).
                 price(product.getPrice()).quantity(product.getQuantity()).productType(product.getProductType()).build();
         productsRepository.save(productDB);

@@ -3,6 +3,7 @@ package io.swagger;
 import io.swagger.exceptions.BadPasswordExcepiton;
 import io.swagger.exceptions.BadUsernameException;
 import io.swagger.exceptions.HMACIntegrityException;
+import org.apache.commons.codec.binary.Hex;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -37,7 +38,7 @@ public class AdditionalFeatures {
         SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey, "HmacSHA256");
         mac.init(secretKeySpec);
         hmacSha256 = mac.doFinal(body.getBytes());
-        String hmacSha256Hex = String.format("%032x", new BigInteger(1, hmacSha256));
+        String hmacSha256Hex = Hex.encodeHexString(hmacSha256);
         if (!hmacSignature.equals(hmacSha256Hex))
         {
             throw new HMACIntegrityException("Body of request has been changed");

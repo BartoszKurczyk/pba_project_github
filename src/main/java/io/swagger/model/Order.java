@@ -9,6 +9,8 @@ import io.swagger.model.ProductInOrder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -16,6 +18,7 @@ import javax.validation.constraints.*;
 /**
  * Order
  */
+@Builder
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-01-12T13:06:49.137Z")
 

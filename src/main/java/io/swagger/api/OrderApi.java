@@ -5,10 +5,12 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.Error;
-import io.swagger.model.MakeOrderRequest;
-import io.swagger.model.OrderResponse;
+import io.swagger.model.*;
+
+import java.util.UUID;
+
 import io.swagger.annotations.*;
+import io.swagger.model.Error;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +25,40 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-01-12T11:30:38.794Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2022-01-25T16:42:58.845Z")
 
 @Validated
 @Api(value = "order", description = "the order API")
 @RequestMapping(value = "/api")
 public interface OrderApi {
+
+    @ApiOperation(value = "Get  details", nickname = "getOrderDetails", notes = "Gets specified order details", response = OrderDetailsResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "order", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success", response = OrderDetailsResponse.class),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
+        @ApiResponse(code = 404, message = "User not found", response = Error.class),
+        @ApiResponse(code = 422, message = "Unprocessable entity. Codes: USER_ALREADY_EXISTS", response = Error.class) })
+    @RequestMapping(value = "/order/{id}",
+        produces = { "application/json" },
+        method = RequestMethod.GET)
+    ResponseEntity<OrderDetailsResponse> getOrderDetails(@ApiParam(value = "",required=true) @PathVariable("id") UUID id, @RequestHeader("Authorization") String token);
+
+
+    @ApiOperation(value = "Get list of orders", nickname = "getOrders", notes = "Get list of orders", response = OrdersListResponse.class, authorizations = {
+        @Authorization(value = "basicAuth")
+    }, tags={ "order", })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success", response = OrdersListResponse.class),
+        @ApiResponse(code = 400, message = "Bad request", response = Error.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = Error.class) })
+    @RequestMapping(value = "/order",
+        produces = { "application/json" },
+        method = RequestMethod.GET)
+    ResponseEntity<OrdersListResponse> getOrders(@RequestHeader("Authorization") String token);
+
 
     @ApiOperation(value = "Make order", nickname = "makeOrder", notes = "Make order", response = OrderResponse.class, authorizations = {
         @Authorization(value = "basicAuth")

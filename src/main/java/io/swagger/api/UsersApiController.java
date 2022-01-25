@@ -5,6 +5,7 @@ import io.swagger.database.model.UserDB;
 import io.swagger.database.repository.UsersRepository;
 import io.swagger.exceptions.BadPasswordExcepiton;
 import io.swagger.exceptions.BadUsernameException;
+import io.swagger.exceptions.UserAlreadyExistsException;
 import io.swagger.exceptions.UserNotFoundException;
 import io.swagger.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,9 +73,12 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<UserResponse> createUser(CreateRequest body, String token) {
         additionalFeatures.BasicAuth(token);
         User user = body.getUser();
+        if(usersRepository.findAll().stream().filter(x-> x.getId().equals(user.getId()) || x.getEmail().equals(user.getEmail())).findAny().orElse(null)!=null)
+            throw new UserAlreadyExistsException("User already exists");
         UserDB userDB = UserDB.builder().id(user.getId()).name(user.getName()).surname(user.getSurname()).adressStreet(user.getAdressStreet()).
                 buildingNumber(user.getBuildingNumber()).apartmentNumber(user.getApartmentNumber()).zipCode(user.getZipCode()).
                 city(user.getCity()).email(user.getEmail()).build();
+
         usersRepository.save(userDB);
         return ResponseEntity.ok().body(UserResponse.builder().responseHeader(ResponseHeader.builder().
                 responseId(body.getRequestHeader().getRequestId()).sendDate(new Date()).build()).user(user).build());
