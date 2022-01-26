@@ -69,7 +69,8 @@ public class ProductsApiController implements ProductsApi {
         ProductDB productDB = ProductDB.builder().id(product.getId()).name(product.getName()).producer(product.getProducer()).description(product.getDescription()).
                 price(product.getPrice()).quantity(product.getQuantity()).productType(product.getProductType()).build();
         productsRepository.save(productDB);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(ProductResponse.builder().responseHeader(ResponseHeader.builder().responseId(UUID.randomUUID()).sendDate(new Date()).build()).
+                product(product).build());
     }
     @Override
     public ResponseEntity<ProductsListResponse> getProducts(String token) {
@@ -102,6 +103,7 @@ public class ProductsApiController implements ProductsApi {
         foundProduct.setProductType(product.getProductType());
 
         productsRepository.save(foundProduct);
-        return null;
+        return ResponseEntity.ok().body(ProductResponse.builder().responseHeader(ResponseHeader.builder().responseId(UUID.randomUUID()).sendDate(new Date()).build()).
+                product(product).build());
     }
 }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.Product;
 import io.swagger.model.ResponseHeader;
+import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -14,6 +15,7 @@ import javax.validation.constraints.*;
 /**
  * ProductResponse
  */
+@Builder
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2021-12-16T08:40:45.527Z")
 
