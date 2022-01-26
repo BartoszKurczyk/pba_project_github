@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+activate Client
+Client->"Res Server":createUser(basicAuth, user)
+activate "Res Server"
+"Res Server"->"Res Server":validBasicAuth
+alt valid ok
+    "Res Server"->"Res Server":checkIfAlreadyExists
+    alt user not exists
+        "Res Server"->"Res Server":create user
+        "Res Server" --> Client:return User
+    else user exists
+        "Res Server" --> Client:return error
+    end
+else valid not ok
+    "Res Server"-->Client: return error
+end
+deactivate "Res Server"
+@enduml

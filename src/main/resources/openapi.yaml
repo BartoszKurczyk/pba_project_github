@@ -1,0 +1,713 @@
+swagger: "2.0"
+info:
+  description: Specification of the CRUD interface
+  version: '1.0.0'
+  title: "Users CRUD interface"
+basePath: "/api"
+tags:
+  - name: users
+    description: Users management operations (CRUD).
+  - name: products
+    description: Products management operations (CRUD).
+  - name: order
+    description: Orders management operations
+schemes:
+  - "http"
+
+paths:
+  /products:
+    get:
+      tags:
+        - "products"
+      summary: "Get list of products"
+      security:
+        - basicAuth: []
+      description: "Get list of products"
+      operationId: "getProducts"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ProductsListResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+
+    post:
+      tags:
+        - "products"
+      summary: "Create product"
+      security:
+        - basicAuth: []
+      description: "Create new produsct"
+      operationId: "addProduct"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Product object that has to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateProductRequest"
+      responses:
+        "201":
+          description: "User created successfully"
+          schema:
+            $ref: "#/definitions/ProductResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity. Codes: USER_ALREADY_EXISTS"
+          schema:
+            $ref: "#/definitions/Error"
+  /products/{id}:
+    put:
+      tags:
+        - "products"
+      summary: "Update product"
+      security:
+        - basicAuth: [ ]
+      description: "Update products data"
+      operationId: "updateProduct"
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/ProductUpdateRequest"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ProductResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity."
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "products"
+      summary: "Delete product"
+      security:
+        - basicAuth: [ ]
+      description: "Removes product"
+      operationId: "deleteProduct"
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: "No content"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity."
+          schema:
+            $ref: "#/definitions/Error"
+  /users/{id}:
+    put:
+      tags:
+        - "users"
+      summary: "Update user"
+      security:
+        - basicAuth: [ ]
+      description: "Update user data"
+      operationId: "updateUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uuid
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/UserUpdateRequest"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/UserResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity."
+          schema:
+            $ref: "#/definitions/Error"
+    delete:
+      tags:
+        - "users"
+      summary: "Delete user"
+      security:
+        - basicAuth: [ ]
+      description: "Removes user"
+      operationId: "deleteUser"
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: "No content"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity."
+          schema:
+            $ref: "#/definitions/Error"
+  /order:
+    get:
+      tags:
+        - "order"
+      summary: "Get list of orders"
+      security:
+        - basicAuth: []
+      description: "Get list of orders"
+      operationId: "getOrders"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/OrdersListResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+    post:
+      tags:
+        - "order"
+      summary: "Make order"
+      security:
+        - basicAuth: []
+      description: "Make order"
+      operationId: "makeOrder"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Order object that has to be made"
+          required: true
+          schema:
+            $ref: "#/definitions/MakeOrderRequest"
+      responses:
+        "201":
+          description: "Order made successfully"
+          schema:
+            $ref: "#/definitions/OrderResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity. Codes: USER_ALREADY_EXISTS"
+          schema:
+            $ref: "#/definitions/Error"
+  /order/{id}:
+    get:
+      tags:
+        - "order"
+      summary: "Get  details"
+      security:
+        - basicAuth: [ ]
+      description: "Gets specified order details"
+      operationId: "getOrderDetails"
+      produces:
+        - "application/json"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/OrderDetailsResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: "User not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity. Codes: USER_ALREADY_EXISTS"
+          schema:
+            $ref: "#/definitions/Error"
+  /users:
+    post:
+      tags:
+        - "users"
+      summary: "Create"
+      security:
+        - basicAuth: []
+      description: "Create new user"
+      operationId: "createUser"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User object that has to be added"
+          required: true
+          schema:
+            $ref: "#/definitions/CreateRequest"
+      responses:
+        "201":
+          description: "User created successfully"
+          schema:
+            $ref: "#/definitions/UserResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity. Codes: USER_ALREADY_EXISTS"
+          schema:
+            $ref: "#/definitions/Error"
+    get:
+      tags:
+        - "users"
+      summary: "Get users list"
+      security:
+        - basicAuth: [ ]
+      description: "Gets all users data"
+      operationId: "getAllUsers"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/UserListResponse"
+        "400":
+          description: "Bad request"
+          schema:
+            $ref: "#/definitions/Error"
+        "401":
+          description: "Unauthorized"
+          schema:
+            $ref: "#/definitions/Error"
+        "422":
+          description: "Unprocessable entity. Codes: USER_ALREADY_EXISTS"
+          schema:
+            $ref: "#/definitions/Error"
+securityDefinitions:
+  basicAuth:
+    type: basic
+  bearerAuth:
+    type: apiKey
+    name: "Bearer"
+    in: "header"
+definitions:
+  User:
+    type: "object"
+    required:
+      - name
+      - surname
+      - age
+      - personalId
+      - citizenship
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: "string"
+        example: "Elon"
+      surname:
+        type: "string"
+        example: "Musk"
+      adressStreet:
+        type: "string"
+        example: "aleja Piastów"
+      buildingNumber:
+        type: "integer"
+        example: 26
+        minimum: 1
+      apartmentNumber:
+        type: integer
+        minimum: 118
+      zipCode:
+        type: "string"
+        example: "71-064"
+        pattern: "^[0-9]{2}-[0-9]{3}$"
+      city:
+        type: "string"
+        example: "Szczecin"
+      email:
+        type: "string"
+        example: "e_musk@gmail.com"
+        pattern: '^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$'
+
+  Product:
+    type: "object"
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: "string"
+        minLength: 5
+        maxLength: 25
+        example: "Iphone 13"
+      producer:
+        type: "string"
+        example: "Apple"
+        minLength: 5
+      description:
+        type: "string"
+        minLength: 25
+        example: "Telefon ma to to i tam to"
+      price:
+        type: "number"
+        format: "float"
+        example: 1.1
+        minimum: 0.01
+      quantity:
+        type: "integer"
+        example: 11
+        minimum: 0
+      productType:
+        type: "string"
+        example: "Mobile Phones"
+        enum:
+          - "Mobile Phones"
+          - "Tablets"
+          - "Laptops"
+  Order:
+    type: "object"
+    properties:
+      id:
+        type: string
+        format: uuid
+      userId:
+        type: "string"
+        format: uuid
+      listOfProductsIds:
+        type: "array"
+        items:
+          $ref: "#/definitions/ProductInOrder"
+
+  ProductInOrder:
+    type: "object"
+    properties:
+      productId:
+        type: "string"
+        format: uuid
+      quantity:
+        type: "integer"
+        example: 2
+        minimum: 0
+
+  ProductInOrderDetails:
+    type: "object"
+    properties:
+      product:
+        $ref: "#/definitions/ShortenProduct"
+      quantity:
+        type: "integer"
+        example: 2
+        minimum: 0
+  ShortenProduct:
+    type: "object"
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: "string"
+        minLength: 5
+        maxLength: 25
+        example: "Iphone 13"
+      producer:
+        type: "string"
+        example: "Apple"
+        minLength: 5
+      price:
+        type: "number"
+        format: "float"
+        example: 1.1
+        minimum: 0.01
+  OrderDetails:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      user:
+        $ref: "#/definitions/User"
+      listOfProducts:
+        type: "array"
+        items:
+          $ref: "#/definitions/ProductInOrderDetails"
+      totalPrice:
+        type: "number"
+        format: "float"
+        example: 1.1
+        minimum: 0.01
+  OrderDetailsResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "orderDetails"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      orderDetails:
+        $ref: "#/definitions/OrderDetails"
+  Error:
+    type: "object"
+    required:
+      - responseHeader
+      - code
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      code:
+        type: "string"
+        example: "NOT_FOUND"
+      message:
+        type: "string"
+        example: "Resource doesn't exist"
+  RequestHeader:
+    type: "object"
+    required:
+      - requestId
+      - sendDate
+    properties:
+      requestId:
+        type: "string"
+        format: uuid
+      sendDate:
+        type: "string"
+        format: date-time
+        example: "2020-11-17T12:08:56.235-0100"
+        description: "Date format according to ISO_8601 for example: yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  ResponseHeader:
+    type: "object"
+    required:
+      - responseId
+      - sendDate
+    properties:
+      responseId:
+        type: "string"
+        format: uuid
+      sendDate:
+        type: "string"
+        format: date-time
+        example: "2020-11-17T12:08:56.235-0100"
+        description: "Date format according to ISO_8601 for example: yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  UserListResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "usersList"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      usersList:
+        type: array
+        items:
+          $ref: "#/definitions/User"
+  ProductResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "user"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      product:
+        $ref: "#/definitions/Product"
+  ProductsListResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "productsList"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      productsList:
+        type: array
+        items:
+          $ref: "#/definitions/Product"
+  OrdersListResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "ordersList"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      ordersList:
+        type: array
+        items:
+          $ref: "#/definitions/Order"
+  CreateProductRequest:
+    type: "object"
+    required:
+      - "requestHeader"
+      - "product"
+    properties:
+      requestHeader:
+        $ref: "#/definitions/RequestHeader"
+      product:
+        $ref: "#/definitions/Product"
+  MakeOrderRequest:
+    type: "object"
+    required:
+      - "requestHeader"
+      - "userId"
+      - "listOfProductsIds"
+    properties:
+      requestHeader:
+        $ref: "#/definitions/RequestHeader"
+      orderDetails:
+        $ref: "#/definitions/Order"
+  OrderResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "orderId"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      orderDetails:
+        $ref: "#/definitions/Order"
+  UserUpdateRequest:
+    type: "object"
+    required:
+      - "requestHeader"
+      - "user"
+    properties:
+      requestHeader:
+        $ref: "#/definitions/RequestHeader"
+      user:
+        $ref: "#/definitions/User"
+  ProductUpdateRequest:
+    type: "object"
+    required:
+      - "requestHeader"
+      - "product"
+    properties:
+      requestHeader:
+        $ref: "#/definitions/RequestHeader"
+      product:
+        $ref: "#/definitions/Product"
+  UserResponse:
+    type: "object"
+    required:
+      - "responseHeader"
+      - "user"
+    properties:
+      responseHeader:
+        $ref: "#/definitions/ResponseHeader"
+      user:
+        $ref: "#/definitions/User"
+  CreateRequest:
+    type: "object"
+    required:
+      - "requestHeader"
+      - "user"
+    properties:
+      requestHeader:
+        $ref: "#/definitions/RequestHeader"
+      user:
+        $ref: "#/definitions/User"
