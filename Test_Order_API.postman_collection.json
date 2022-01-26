@@ -1,0 +1,1325 @@
+{
+	"info": {
+		"_postman_id": "906ba805-a3ef-496f-9442-4dd72d3f1148",
+		"name": "Test Order API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Check get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.productsList.length).to.eql(1);\r",
+							"    pm.expect(responseBody.productsList[0].id).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.productsList[0].name).to.eql(\"MacBook Pro\");\r",
+							"    pm.expect(responseBody.productsList[0].producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.productsList[0].description).to.eql(\"Laptop ma to to i tam to\");\r",
+							"    pm.expect(responseBody.productsList[0].price).to.eql(1000.99);\r",
+							"    pm.expect(responseBody.productsList[0].quantity).to.eql(11);\r",
+							"    pm.expect(responseBody.productsList[0].productType).to.eql(\"Laptops\");\r",
+							"\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check missing header excepiton",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function(){\r",
+							"    pm.response.to.have.status(400);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.code).to.eql(\"400\");\r",
+							"    pm.expect(response.message).to.eql(\"Required request header 'Authorization' for method parameter type String is not present\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check get all products with auth error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 401\", function(){\r",
+							"    pm.response.to.have.status(401);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.code).to.eql(\"401\");\r",
+							"    pm.expect(response.message).to.eql(\"Wrong username\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin1",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.usersList.length).to.eql(1);\r",
+							"    pm.expect(responseBody.usersList[0].id).to.eql(\"630b053b-c8b7-4460-8cba-6c969f1f0b45\");\r",
+							"    pm.expect(responseBody.usersList[0].name).to.eql(\"Elon\");\r",
+							"    pm.expect(responseBody.usersList[0].surname).to.eql(\"Musk\");\r",
+							"    pm.expect(responseBody.usersList[0].adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.usersList[0].buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.usersList[0].apartmentNumber).to.eql(118);\r",
+							"    pm.expect(responseBody.usersList[0].zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.usersList[0].city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.usersList[0].email).to.eql(\"e_musk@gmail.com\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check make order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    const requestBody = pm.request.json;\r",
+							"\r",
+							"    pm.expect(responseBody.orderDetails.id).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.orderDetails.userId).to.eql(\"630b053b-c8b7-4460-8cba-6c969f1f0b45\");\r",
+							"    pm.expect(responseBody.orderDetails.listOfProductsIds.length).to.eql(1);\r",
+							"    pm.expect(responseBody.orderDetails.listOfProductsIds[0].productId).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.orderDetails.listOfProductsIds[0].quantity).to.eql(2);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-HMAC-SIGNATURE",
+						"value": "ad0dcc777f48f9cc3a3c1bec5f6c2e0f5a0ac42b213f4e297bfa24a0cb7ccfa0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"orderDetails\": {\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"userId\": \"630b053b-c8b7-4460-8cba-6c969f1f0b45\",\r\n    \"listOfProductsIds\": [\r\n      {\r\n        \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n        \"quantity\": 2\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/order",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check make order which already exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 422\", function(){\r",
+							"    pm.response.to.have.status(422);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.code).to.eql(\"ORDER_ALREADY_EXISTS_EXCEPTION\");\r",
+							"    pm.expect(response.message).to.eql(\"Order already exists in database\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-HMAC-SIGNATURE",
+						"value": "ad0dcc777f48f9cc3a3c1bec5f6c2e0f5a0ac42b213f4e297bfa24a0cb7ccfa0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"orderDetails\": {\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"userId\": \"630b053b-c8b7-4460-8cba-6c969f1f0b45\",\r\n    \"listOfProductsIds\": [\r\n      {\r\n        \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n        \"quantity\": 2\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/order",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check make order HMAC error",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function(){\r",
+							"    pm.response.to.have.status(400);\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.code).to.eql(\"400\");\r",
+							"    pm.expect(response.message).to.eql(\"Body of request has been changed\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-HMAC-SIGNATURE",
+						"value": "33d639bec3a2058f8b83abb6d6ec41ef1612dbbb8696520bf4e65b058e6b6ed4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"orderDetails\": {\r\n    \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"userId\": \"630b053b-c8b7-4460-8cba-6c969f1f0b45\",\r\n    \"listOfProductsIds\": [\r\n      {\r\n        \"productId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n        \"quantity\": 2\r\n      }\r\n    ]\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/order",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check get all orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.ordersList.length).to.eql(1);\r",
+							"    pm.expect(responseBody.ordersList[0].id).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.ordersList[0].userId).to.eql(\"630b053b-c8b7-4460-8cba-6c969f1f0b45\");\r",
+							"    pm.expect(responseBody.ordersList[0].listOfProductsIds.length).to.eql(1);\r",
+							"\r",
+							"    pm.expect(responseBody.ordersList[0].listOfProductsIds[0].productId).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.ordersList[0].listOfProductsIds[0].quantity).to.eql(2);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/order",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check get order details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.orderDetails.id).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.orderDetails.user.id).to.eql(\"630b053b-c8b7-4460-8cba-6c969f1f0b45\");\r",
+							"    pm.expect(responseBody.orderDetails.user.name).to.eql(\"Elon\");\r",
+							"    pm.expect(responseBody.orderDetails.user.surname).to.eql(\"Musk\");\r",
+							"    pm.expect(responseBody.orderDetails.user.adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.orderDetails.user.buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.orderDetails.user.apartmentNumber).to.eql(118);\r",
+							"    pm.expect(responseBody.orderDetails.user.zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.orderDetails.user.city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.orderDetails.user.email).to.eql(\"e_musk@gmail.com\");\r",
+							"\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts.length).to.eql(1);\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts[0].product.id).to.eql(\"3fa85f64-5717-4562-b3fc-2c963f66afa6\");\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts[0].product.name).to.eql(\"MacBook Pro\");\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts[0].product.producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts[0].product.price).to.eql(1000.99);\r",
+							"    pm.expect(responseBody.orderDetails.listOfProducts[0].quantity).to.eql(2);\r",
+							"\r",
+							"    pm.expect(responseBody.orderDetails.totalPrice).to.eql(2001.98);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/order/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"order",
+						"3fa85f64-5717-4562-b3fc-2c963f66afa6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check add new user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.user.id).to.eql(\"97d3aa25-5b20-4725-8a81-29c9740377f4\");\r",
+							"    pm.expect(responseBody.user.name).to.eql(\"Bartosz\");\r",
+							"    pm.expect(responseBody.user.surname).to.eql(\"Kurczyk\");\r",
+							"    pm.expect(responseBody.user.adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.user.buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.user.apartmentNumber).to.eql(119);\r",
+							"    pm.expect(responseBody.user.zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.user.city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.user.email).to.eql(\"b_kurczyk@gmail.com\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"user\": {\r\n    \"id\": \"97d3aa25-5b20-4725-8a81-29c9740377f4\",\r\n    \"name\": \"Bartosz\",\r\n    \"surname\": \"Kurczyk\",\r\n    \"adressStreet\": \"aleja Piastów\",\r\n    \"buildingNumber\": 26,\r\n    \"apartmentNumber\": 119,\r\n    \"zipCode\": \"71-064\",\r\n    \"city\": \"Szczecin\",\r\n    \"email\": \"b_kurczyk@gmail.com\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new user has been added",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.usersList.length).to.eql(2);\r",
+							"    pm.expect(responseBody.usersList[1].id).to.eql(\"97d3aa25-5b20-4725-8a81-29c9740377f4\");\r",
+							"    pm.expect(responseBody.usersList[1].name).to.eql(\"Bartosz\");\r",
+							"    pm.expect(responseBody.usersList[1].surname).to.eql(\"Kurczyk\");\r",
+							"    pm.expect(responseBody.usersList[1].adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.usersList[1].buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.usersList[1].apartmentNumber).to.eql(119);\r",
+							"    pm.expect(responseBody.usersList[1].zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.usersList[1].city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.usersList[1].email).to.eql(\"b_kurczyk@gmail.com\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users/",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.user.id).to.eql(\"97d3aa25-5b20-4725-8a81-29c9740377f4\");\r",
+							"    pm.expect(responseBody.user.name).to.eql(\"Bartosz\");\r",
+							"    pm.expect(responseBody.user.surname).to.eql(\"Kurczyk\");\r",
+							"    pm.expect(responseBody.user.adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.user.buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.user.apartmentNumber).to.eql(119);\r",
+							"    pm.expect(responseBody.user.zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.user.city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.user.email).to.eql(\"bartek_kurczyk@gmail.com\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"user\": {\r\n    \"id\": \"97d3aa25-5b20-4725-8a81-29c9740377f4\",\r\n    \"name\": \"Bartosz\",\r\n    \"surname\": \"Kurczyk\",\r\n    \"adressStreet\": \"aleja Piastów\",\r\n    \"buildingNumber\": 26,\r\n    \"apartmentNumber\": 119,\r\n    \"zipCode\": \"71-064\",\r\n    \"city\": \"Szczecin\",\r\n    \"email\": \"bartek_kurczyk@gmail.com\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users/97d3aa25-5b20-4725-8a81-29c9740377f4",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						"97d3aa25-5b20-4725-8a81-29c9740377f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new user has been updated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.usersList.length).to.eql(2);\r",
+							"    pm.expect(responseBody.usersList[1].id).to.eql(\"97d3aa25-5b20-4725-8a81-29c9740377f4\");\r",
+							"    pm.expect(responseBody.usersList[1].name).to.eql(\"Bartosz\");\r",
+							"    pm.expect(responseBody.usersList[1].surname).to.eql(\"Kurczyk\");\r",
+							"    pm.expect(responseBody.usersList[1].adressStreet).to.eql(\"aleja Piastów\");\r",
+							"    pm.expect(responseBody.usersList[1].buildingNumber).to.eql(26);\r",
+							"    pm.expect(responseBody.usersList[1].apartmentNumber).to.eql(119);\r",
+							"    pm.expect(responseBody.usersList[1].zipCode).to.eql(\"71-064\");\r",
+							"    pm.expect(responseBody.usersList[1].city).to.eql(\"Szczecin\");\r",
+							"    pm.expect(responseBody.usersList[1].email).to.eql(\"bartek_kurczyk@gmail.com\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users/",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function(){\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users/97d3aa25-5b20-4725-8a81-29c9740377f4",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						"97d3aa25-5b20-4725-8a81-29c9740377f4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new user has been deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.usersList.length).to.eql(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/users/",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check add new product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.product.id).to.eql(\"f1dae7b8-8777-46fa-9198-44e2310dfc7e\");\r",
+							"    pm.expect(responseBody.product.name).to.eql(\"Iphone 13\");\r",
+							"    pm.expect(responseBody.product.producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.product.description).to.eql(\"Telefon ma to to i tam to\");\r",
+							"    pm.expect(responseBody.product.price).to.eql(299.99);\r",
+							"    pm.expect(responseBody.product.quantity).to.eql(20);\r",
+							"    pm.expect(responseBody.product.productType).to.eql(\"Mobile Phones\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"product\": {\r\n    \"id\": \"f1dae7b8-8777-46fa-9198-44e2310dfc7e\",\r\n    \"name\": \"Iphone 13\",\r\n    \"producer\": \"Apple\",\r\n    \"description\": \"Telefon ma to to i tam to\",\r\n    \"price\": 299.99,\r\n    \"quantity\": 20,\r\n    \"productType\": \"Mobile Phones\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new product has been added",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.productsList.length).to.eql(2);\r",
+							"    pm.expect(responseBody.productsList[1].id).to.eql(\"f1dae7b8-8777-46fa-9198-44e2310dfc7e\");\r",
+							"    pm.expect(responseBody.productsList[1].name).to.eql(\"Iphone 13\");\r",
+							"    pm.expect(responseBody.productsList[1].producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.productsList[1].description).to.eql(\"Telefon ma to to i tam to\");\r",
+							"    pm.expect(responseBody.productsList[1].price).to.eql(299.99);\r",
+							"    pm.expect(responseBody.productsList[1].quantity).to.eql(20);\r",
+							"    pm.expect(responseBody.productsList[1].productType).to.eql(\"Mobile Phones\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check update product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.product.id).to.eql(\"f1dae7b8-8777-46fa-9198-44e2310dfc7e\");\r",
+							"    pm.expect(responseBody.product.name).to.eql(\"Iphone 13\");\r",
+							"    pm.expect(responseBody.product.producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.product.description).to.eql(\"Telefon ma to to i tam to\");\r",
+							"    pm.expect(responseBody.product.price).to.eql(299.99);\r",
+							"    pm.expect(responseBody.product.quantity).to.eql(22);\r",
+							"    pm.expect(responseBody.product.productType).to.eql(\"Mobile Phones\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestHeader\": {\r\n    \"requestId\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\r\n    \"sendDate\": \"2020-11-17T12:08:56.235-0100\"\r\n  },\r\n  \"product\": {\r\n    \"id\": \"f1dae7b8-8777-46fa-9198-44e2310dfc7e\",\r\n    \"name\": \"Iphone 13\",\r\n    \"producer\": \"Apple\",\r\n    \"description\": \"Telefon ma to to i tam to\",\r\n    \"price\": 299.99,\r\n    \"quantity\": 22,\r\n    \"productType\": \"Mobile Phones\"\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products/f1dae7b8-8777-46fa-9198-44e2310dfc7e",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products",
+						"f1dae7b8-8777-46fa-9198-44e2310dfc7e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new product has been updated",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.productsList.length).to.eql(2);\r",
+							"    pm.expect(responseBody.productsList[1].id).to.eql(\"f1dae7b8-8777-46fa-9198-44e2310dfc7e\");\r",
+							"    pm.expect(responseBody.productsList[1].name).to.eql(\"Iphone 13\");\r",
+							"    pm.expect(responseBody.productsList[1].producer).to.eql(\"Apple\");\r",
+							"    pm.expect(responseBody.productsList[1].description).to.eql(\"Telefon ma to to i tam to\");\r",
+							"    pm.expect(responseBody.productsList[1].price).to.eql(299.99);\r",
+							"    pm.expect(responseBody.productsList[1].quantity).to.eql(22);\r",
+							"    pm.expect(responseBody.productsList[1].productType).to.eql(\"Mobile Phones\");\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check delete product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function(){\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products/f1dae7b8-8777-46fa-9198-44e2310dfc7e",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products",
+						"f1dae7b8-8777-46fa-9198-44e2310dfc7e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check if new product has been deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response body is ok\",function(){\r",
+							"    const responseBody = pm.response.json();\r",
+							"    pm.expect(responseBody.productsList.length).to.eql(1);\r",
+							"\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://pba-project.herokuapp.com/api/products",
+					"protocol": "https",
+					"host": [
+						"pba-project",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"api",
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
