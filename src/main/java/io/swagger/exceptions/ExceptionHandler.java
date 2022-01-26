@@ -5,6 +5,7 @@ import io.swagger.model.ResponseHeader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -33,8 +34,8 @@ public class ExceptionHandler {
         return new ResponseEntity<Error>(error, HttpStatus.BAD_REQUEST);
     }
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Error> handleBadRequestException(BadRequestException ex, WebRequest request) {
+    @org.springframework.web.bind.annotation.ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<Error> handleMissingRequestHeaderException(MissingRequestHeaderException ex, WebRequest request) {
         Error error = new Error();
         error.setResponseHeader(ResponseHeader.builder().sendDate(new Date()).responseId(UUID.randomUUID()).build());
         error.code("400");
